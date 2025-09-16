@@ -399,3 +399,22 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+
+# --- Frontend (Vite/Node) ---
+budgetplaner-web/node_modules/
+budgetplaner-web/dist/
+budgetplaner-web/.vite/
+
+# Env-Dateien (nicht committen)
+budgetplaner-web/.env
+budgetplaner-web/.env.*.local
+# Aber ein Beispiel committen:
+!budgetplaner-web/.env.example
+
+# Logs
+*.log
+
+# --- SQLite / lokale DB ---
+BudgetPlaner.Api/budget.db
+*.sqlite

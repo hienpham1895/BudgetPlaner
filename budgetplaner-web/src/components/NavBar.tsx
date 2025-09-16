@@ -9,7 +9,8 @@ export default function NavBar() {
                 <a href="/expenses">Ausgaben</a>
                 <a href="/incomes">Einnahmen</a>
                 <a href="/summary">Monats-Übersicht</a>
-                <a href="/budget">Monatliches Budget</a>
+                <a href="/budget">Budget</a>
+                <a href="/savings">Sparziel</a>
             </nav>
         </header>
     );

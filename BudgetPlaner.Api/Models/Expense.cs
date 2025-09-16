@@ -10,7 +10,7 @@ public class Expense
     }
 
     [Required]
-    public DateOnly Date
+    public DateTime Date
     {
         get; set;
     }
@@ -22,7 +22,7 @@ public class Expense
     }
 
     [Required]
-    public String Category
+    public string? Category
     {
         get; set;
     }

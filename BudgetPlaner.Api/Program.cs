@@ -1,48 +1,37 @@
-using Microsoft.EntityFrameworkCore;
 using BudgetPlaner.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using BudgetPlaner.Api.Endpoints; // ← für MapExpensesEndpoints/MapIncomesEndpoints
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Services
-builder.Services.AddControllers();
+builder.Services.AddDbContext<BudgetContext>(opt =>
+    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("frontend", p => p
+        .WithOrigins(builder.Configuration["FrontendOrigin"] ?? "http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS erlauben (Vite-Dev-Server)
-const string FrontendOrigin = "http://localhost:5173";
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(FrontendOrigin)
-              .AllowAnyHeader()
-              .AllowAnyMethod());
-});
-
-// DbContext registrieren mit SQLite
-builder.Services.AddDbContext<BudgetContext>(options =>
-    options.UseSqlite("Data Source=budget.db"));
-
-// .NET 9: Generiert die OpenAPI-JSON
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
 
-// Pipeline
+app.UseCors("frontend");
 
-// OpenAPI-JSON unter /openapi/v1.json
-app.MapOpenApi();
-
-
-//Swagger-UI
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapGet("/", () => Results.Ok("BudgetPlaner API läuft"));
 
-app.UseAuthorization();
-
-app.MapControllers();
+// 💡 hier nur noch aufrufen:
+app.MapExpensesEndpoints();
+app.MapIncomesEndpoints();
 
 app.Run();
-
-
